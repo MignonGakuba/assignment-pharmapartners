@@ -91,6 +91,7 @@ export class AppComponent {
   }
 
   confirmCurrency(element:Currency){
+    
     this.currencyService.createCurrency(JSON.stringify(element)).subscribe((data:JsonResult) => {
       if(data.result) {
           console.log(data.message);
