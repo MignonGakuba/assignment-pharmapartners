@@ -28,10 +28,10 @@ public class CurrencyService implements ICurrencyService {
     @Override
     public Currency create(Currency currencyDto) {
         try {
-            if(checkIfCurrencyExist(currencyDto))
+            if (checkIfCurrencyExist(currencyDto))
                 throw new IllegalArgumentException("Currency already exists with this id");
             else
-            repository.save(currencyDto);
+                repository.save(currencyDto);
             return currencyDto;
         } catch (HibernateException e) {
             logger.warn("Error while getting the currency" + currencyDto.getId());
@@ -87,7 +87,6 @@ public class CurrencyService implements ICurrencyService {
     private boolean checkIfCurrencyExist(Currency currency) {
         return repository.existsById(currency.getId());
     }
-
 
 
 }

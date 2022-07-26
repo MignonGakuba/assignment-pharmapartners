@@ -53,6 +53,7 @@ public class CurrencyControllerTest {
             .NUMBER_OF_COINS("16.670.000")
             .MARKET_CAP("189.580.000.000")
             .build();
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
