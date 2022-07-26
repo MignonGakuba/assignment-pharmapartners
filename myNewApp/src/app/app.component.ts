@@ -64,7 +64,6 @@ export class AppComponent {
       let retreviedCurrencies: Object[] =  data.item as Object [];
       retreviedCurrencies.map(value =>{
       let currency : Currency = new Currency(value);
-      //add to list 
       this.dataSource.data.unshift(currency);
       });
          console.log(data.message);
@@ -88,23 +87,67 @@ export class AppComponent {
       market_cap: '',
     };
     this.dataSource.data = [newCurrency, ...this.dataSource.data];
+
   }
 
+  confirmCurrency(element:Currency){
+    this.currencyService.createCurrency(JSON.stringify(element)).subscribe((data:JsonResult) => {
+      if(data.result) {
+           
+        // convert the ist of item to right class 
+       let retreviedCurrencies: Object[] =  data.item as Object [];
+       retreviedCurrencies.map(value =>{
+       let currency : Currency = new Currency(value);
+       this.dataSource.data.unshift(currency);
+       });
+          console.log(data.message);
+        } else {
+          console.log(data.message);
+        }
+      },
+      error => {
+        console.log(error, 'error');
+      });
+  }
 
 
   removeRow(id: number) {
-     this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);    
-     
+     this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);  
+     let currency = this.dataSource.data.filter((u) => u.id = id);  
+
+
+     this.currencyService.deleteCurrency(JSON.stringify(currency)).subscribe((data:JsonResult) =>{
+      if(data.result) {   
+        console.log(data.message);
+        } else {
+          console.log(data.message);
+        }
+      },
+      error => {
+        console.log(error, 'error');
+      });
+
+  }
     
-  }
 
-  confirmToUpdate(id: number){
-   
-    //filter fromt the list
-    //create service methode to update the selected currency with new value
-  }
+  confirmToUpdate(id: number) {
 
+    this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);  
+    let currency = this.dataSource.data.filter((u) => u.id = id);  
 
+    this.currencyService.updateCurrency(JSON.stringify(currency)).subscribe((data:JsonResult) =>{
+     if(data.result) {   
+       console.log(data.message);
+       } else {
+         console.log(data.message);
+       }
+     },
+     error => {
+       console.log(error, 'error');
+     });
+
+    }
+  
 }
   function addRow() {
     throw new Error('Function not implemented.');
