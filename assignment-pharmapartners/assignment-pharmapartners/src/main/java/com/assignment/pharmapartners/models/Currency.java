@@ -1,16 +1,20 @@
 package com.assignment.pharmapartners.models;
 
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
+/**
+ * Represents a currency
+ */
 @Entity
 public class Currency {
 
+    //All final attributes
     @GeneratedValue(strategy = IDENTITY)
     private Long Id;
 
@@ -26,8 +30,17 @@ public class Currency {
     @Column(nullable = false)
     private String MARKET_CAP;
 
-    public void setId(Long Id) {
-        this.Id = Id;
+
+    //Constructor
+    public Currency() {
+
+    }
+
+    private Currency(CurrencyBuilder builder) {
+        this.Name = builder.Name;
+        this.TICKER = builder.TICKER;
+        this.NUMBER_OF_COINS = builder.NUMBER_OF_COINS;
+        this.MARKET_CAP = builder.MARKET_CAP;
     }
 
     @Id
@@ -35,6 +48,10 @@ public class Currency {
         return Id;
     }
 
+    //All getter, and NO setter to provide immutability
+    public void setId(Long Id) {
+        this.Id = Id;
+    }
 
     public String getName() {
         return Name;
@@ -69,5 +86,67 @@ public class Currency {
     }
 
 
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "Id=" + Id +
+                ", Name='" + Name + '\'' +
+                ", TICKER='" + TICKER + '\'' +
+                ", NUMBER_OF_COINS='" + NUMBER_OF_COINS + '\'' +
+                ", MARKET_CAP='" + MARKET_CAP + '\'' +
+                '}';
+    }
+
+    /**
+     * Implementing Builder Pattern on the Model Currency
+     */
+
+    public static class CurrencyBuilder {
+
+        private Long Id;
+        private String Name;
+        private String TICKER;
+        private String NUMBER_OF_COINS;
+        private String MARKET_CAP;
+
+        public CurrencyBuilder(Long id, String name, String TICKER, String NUMBER_OF_COINS, String MARKET_CAP) {
+            this.Id = id;
+            this.Name = name;
+            this.TICKER = TICKER;
+            this.NUMBER_OF_COINS = NUMBER_OF_COINS;
+            this.MARKET_CAP = MARKET_CAP;
+        }
+
+        public CurrencyBuilder Name(String Name) {
+            this.Name = Name;
+            return this;
+        }
+
+        public CurrencyBuilder TICKER(String TICKER) {
+            this.TICKER = TICKER;
+            return this;
+        }
+
+        public CurrencyBuilder NUMBER_OF_COINS(String NUMBER_OF_COINS) {
+            this.NUMBER_OF_COINS = NUMBER_OF_COINS;
+            return this;
+        }
+
+        public CurrencyBuilder MARKET_CAP(String MARKET_CAP) {
+            this.MARKET_CAP = MARKET_CAP;
+            return this;
+        }
+
+
+        /**
+         * @return constructed Currency object
+         */
+        public Currency build() {
+            Currency currency = new Currency(this);
+            return currency;
+        }
+
+    }
 
 }
+

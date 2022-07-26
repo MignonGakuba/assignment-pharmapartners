@@ -2,7 +2,7 @@ package com.assignment.pharmapartners.interfaces;
 
 import java.util.List;
 
-public interface IGenericService <T>{
+public interface IGenericService<T> {
 
 
     T create(T object);

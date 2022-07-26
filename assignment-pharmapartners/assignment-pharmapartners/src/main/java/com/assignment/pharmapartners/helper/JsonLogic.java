@@ -3,9 +3,14 @@ package com.assignment.pharmapartners.helper;
 
 import com.google.gson.Gson;
 
+/**
+ * This is class is responsible for parsing the input from the client-side,
+ * to the expected class. Its parse the string json to an (Currency) Class.
+ */
 public class JsonLogic {
 
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
+
     public static Object getObject(Class expected, String json) {
         Object result = null;
         try {

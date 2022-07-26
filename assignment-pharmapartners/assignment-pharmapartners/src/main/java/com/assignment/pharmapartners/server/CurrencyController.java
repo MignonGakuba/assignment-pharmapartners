@@ -14,11 +14,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jdk.nashorn.internal.objects.NativeMath.log;
 
 
+/**
+ * com.assignment.pharmapartners.server @RequestMapping(value = "/api/currencies")
+ * This controller is responsible for making restful web services
+ * Allows the class to handle the request made by the client.
+ */
 @RequestMapping(value = "/api/currencies")
 @RestController
 public class CurrencyController {
@@ -31,49 +37,60 @@ public class CurrencyController {
     @Autowired
     private CurrencyValidator validator;
 
-    //Create get methode to get all currencies
-    //GET	/api/currencies	Haalt een lijst met records op
-    @GetMapping(value = "/get-all")
-    public ResponseEntity<JsonResult> getAllCurrencies( @RequestParam(required = false, value = "page", defaultValue = "0") Integer page,
-                                                        @RequestParam(required = false, value = "TICKER", defaultValue ="BTC") String sort ) {
+    /**
+     * Create get methode to get all currencies
+     * GET/api/currencies Get all list of records
+     *
+     * @return ResponseEntity <JsonResult>
+     */
+
+    @GetMapping(value = "/get-all-currencies")
+    public ResponseEntity<JsonResult> getAllCurrencies(@RequestParam(required = false, value = "page", defaultValue = "0") Integer page,
+                                                       @RequestParam(required = false, value = "TICKER", defaultValue = "BTC") String sort) {
 
         logger.info("Get all currencies from the memory database");
         JsonResult result = new JsonResult();
         try {
             List<Currency> currencies = currencyService.read();
             if (currencies != null) {
+                result.setTimestamp(LocalDateTime.now());
                 result.setResult(true);
                 result.setItem(currencies);
                 result.setMessage("Currencies is successfully retrieved");
                 return new ResponseEntity<>(result, HttpStatus.OK);
             } else {
                 result.setResult(false);
-                result.setMessage("Failed to get a currencies.");
+                result.setMessage("Failed to get the currencies.");
                 result.setErrorCode(ErrorCode.FAILED_RETRIEVING_ALL_CURRENCIES);
                 return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
             }
 
         } catch (Exception e) {
             result.setResult(false);
-            result.setMessage("Failed to get a currencies.");
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
             logger.warn("UNKOWN ERROR");
-            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    ///TODO
-    //POST	/api/currencies	Creëert een nieuw record
+    /**
+     * Create POST methode on create a new record
+     * Post/api/currencies/[create-currency]	Get a specific record on id
+     *
+     * @return ResponseEntity <JsonResult>
+     */
+
     @PostMapping(value = "/create-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> createCurrency(@RequestBody String json) {
 
         log(getClass(), "Create new Currency....");
         JsonResult result = new JsonResult();
         try {
-            Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class,json);
+            Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
             if (validator.validCreateCurrency(requestedCurrency)) {
                 Currency createdCurrency = currencyService.create(requestedCurrency);
+                result.setTimestamp(LocalDateTime.now());
                 if (createdCurrency != null) {
                     result.setResult(true);
                     result.setItem(createdCurrency);
@@ -86,28 +103,38 @@ public class CurrencyController {
                     return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
                 }
             }
-            log(getClass(), "Failed creating this currency......");
+            log(getClass(), "The requested record doesn't pass the validation");
+            result.setTimestamp(LocalDateTime.now());
+            result.setResult(false);
+            result.setMessage("Failed creating this currency. The request record doesn't pass the validation");
+            result.setErrorCode(ErrorCode.FAILED_CREATING_CURRENCY);
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
+            result.setTimestamp(LocalDateTime.now());
             result.setResult(false);
-            result.setMessage("Failed to creat a currencies.");
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
             logger.warn("UNKOWN ERROR");
-            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    //Create get methode on curencey Id
-    //GET	/api/currencies/[identifier]	Haalt een specifiek record op id
+    /**
+     * Create methode on currency on id
+     *
+     * @param id GET/api/currencies/[currency]/{id}	Get a specific record on id
+     * @return ResponseEntity <JsonResult>
+     */
+
     @GetMapping(value = "/currency/{id}")
-    public ResponseEntity<JsonResult> getCurrencyById(@PathVariable(value="id") long id) {
+    public ResponseEntity<JsonResult> getCurrencyById(@PathVariable(value = "id") long id) {
         log(getClass(), "Get Currency by identifier....");
         JsonResult result = new JsonResult();
         try {
             Currency requestedCurrency = currencyService.retrieveCurrencyById(id);
             if (requestedCurrency != null) {
+                result.setTimestamp(LocalDateTime.now());
                 result.setResult(true);
                 result.setItem(requestedCurrency);
                 result.setMessage("Currency is successfully retrieved");
@@ -121,49 +148,91 @@ public class CurrencyController {
 
         } catch (Exception e) {
             result.setResult(false);
-            result.setMessage("Failed to delete a currencies.");
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
             logger.warn("UNKOWN ERROR");
-            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    //Update methode on the Id
-    //PUT	/api/currencies/[identifier]	Update een specifiek record
+    /**
+     * Update methode on the whole object
+     * //PUT/api/currencies/[currency Update a specific record
+     *
+     * @return ResponseEntity <JsonResult>
+     */
+
     @PutMapping(value = "/update-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> updateCurrency(@RequestBody String json) {
         log(getClass(), "Updating the Currency....");
         JsonResult result = new JsonResult();
         try {
             Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
-            if (validator.validationCurrency(requestedCurrency)) {
-                boolean IsDeleted = currencyService.delete(requestedCurrency);
-                if (IsDeleted) {
-                    result.setResult(true);
-                    result.setMessage("Currency is successfully updated");
-                    return new ResponseEntity<>(result, HttpStatus.OK);
+            validator.validationCurrency(requestedCurrency);
+            Currency updatedCurrency = currencyService.update(requestedCurrency);
+            if (updatedCurrency != null) {
+                result.setResult(true);
+                result.setTimestamp(LocalDateTime.now());
+                result.setItem(updatedCurrency);
+                result.setMessage("Currency is successfully updated");
+                return new ResponseEntity<>(result, HttpStatus.OK);
 
-                } else {
-                    result.setResult(false);
-                    result.setMessage("Failed updating this currency.");
-                    result.setErrorCode(ErrorCode.FAILED_UPDATE_CURRENCY);
-                    return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-                }
+            } else {
+                result.setResult(false);
+                result.setMessage("Failed updating this currency.");
+                result.setErrorCode(ErrorCode.FAILED_UPDATE_CURRENCY);
+                return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
             }
-            log(getClass(), "Failed updating this currency......");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 
         } catch (Exception e) {
             result.setResult(false);
-            result.setMessage("Failed updating this currency.");
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
             log(this.getClass(), e.getMessage());
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+
+
+    /**
+     * Delete methode on the whole object
+     * DELETE/api/currencies/[identifier Delete a specific record
+     *
+     * @return ResponseEntity <JsonResult>
+     */
+
+    @DeleteMapping(value = "/delete-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JsonResult> deleteCurrency(@RequestBody String json) {
+        log(getClass(), "Delete the Currency....");
+        JsonResult result = new JsonResult();
+        result.setTimestamp(LocalDateTime.now());
+
+        try {
+            Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
+            validator.validationCurrency(requestedCurrency);
+            boolean IsDeleted = currencyService.delete(requestedCurrency);
+            result.setTimestamp(LocalDateTime.now());
+            if (IsDeleted) {
+                result.setResult(true);
+                result.setMessage("Currency is successfully deleted");
+                return new ResponseEntity<>(result, HttpStatus.OK);
+
+            } else {
+                result.setResult(false);
+                result.setMessage("Failed deleting this currency.");
+                result.setErrorCode(ErrorCode.FAILED_DELETE_CURRENCY);
+                return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            }
+
+        } catch (Exception e) {
+            result.setTimestamp(LocalDateTime.now());
+            result.setResult(false);
+            result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
+            result.setErrorMessage(e.toString());
+            log(this.getClass(), e.getMessage());
+            return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

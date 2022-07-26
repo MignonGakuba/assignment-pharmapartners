@@ -3,6 +3,11 @@ package com.assignment.pharmapartners.helper;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Errorcode is a enum that contains the value which unexpected events occur.
+ * It helps maintain the normal, desired flow of the program even when unexpected events occur
+ * Main focus is on the  exception handling control flow.
+ */
 public enum ErrorCode {
 
     NOTHING_WRONG(0),
@@ -17,12 +22,13 @@ public enum ErrorCode {
     GENERIC_OR_UNKNOWN(1);
 
     private int value;
-    private static Map map = new HashMap<>();
+    private static final Map map = new HashMap<>();
 
-    ErrorCode(){
+    ErrorCode() {
 
     }
-    private ErrorCode(int value) {
+
+    ErrorCode(int value) {
         this.value = value;
     }
 
@@ -34,7 +40,7 @@ public enum ErrorCode {
 
     public static ErrorCode valueOf(int errorCode) {
         ErrorCode code = (ErrorCode) map.get(errorCode);
-        if (code == null){
+        if (code == null) {
             code = GENERIC_OR_UNKNOWN;
         }
         return code;

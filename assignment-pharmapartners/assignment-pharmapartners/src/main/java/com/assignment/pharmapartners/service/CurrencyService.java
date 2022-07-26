@@ -14,37 +14,52 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Allows developers to add business functionalities for the @RestController
+ */
 @Service
 public class CurrencyService implements ICurrencyService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
     @Autowired
     private CurrencyRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
+    @Override
+    public Currency create(Currency currencyDto) {
+        try {
+            if(checkIfCurrencyExist(currencyDto))
+                throw new IllegalArgumentException("Currency already exists with this id");
+            else
+            repository.save(currencyDto);
+            return currencyDto;
+        } catch (HibernateException e) {
+            logger.warn("Error while getting the currency" + currencyDto.getId());
+            throw e;
+        }
+    }
 
     @Override
     public List<Currency> read() {
         List<Currency> currencies = new ArrayList<>();
         try {
             currencies = repository.findAll(Sort.by(Sort.Direction.ASC, "TICKER"));
-        }
-        catch (Exception exception){
-             logger.warn(exception.getMessage());
+        } catch (Exception exception) {
+            logger.warn(exception.getMessage());
         }
         return currencies;
     }
 
     @Override
     public Currency update(Currency currencyDto) {
-        try{
-         Currency currencyToUpdate = repository.findCurrencyById(currencyDto.getId());
-         currencyToUpdate.setName(currencyDto.getName());
-         currencyToUpdate.setNUMBER_OF_COINS(currencyDto.getNUMBER_OF_COINS());
-         currencyToUpdate.setMARKET_CAP(currencyDto.getMARKET_CAP());
-         repository.save(currencyToUpdate);
+        try {
+            Currency currencyToUpdate = repository.findCurrencyById(currencyDto.getId());
+            currencyToUpdate.setName(currencyDto.getName());
+            currencyToUpdate.setTICKER(currencyDto.getTICKER());
+            currencyToUpdate.setNUMBER_OF_COINS(currencyDto.getNUMBER_OF_COINS());
+            currencyToUpdate.setMARKET_CAP(currencyDto.getMARKET_CAP());
+            repository.save(currencyToUpdate);
 
-        }
-        catch (HibernateException e) {
+        } catch (HibernateException e) {
             logger.warn("Error while updating the currency" + currencyDto.getId());
             throw e;
         }
@@ -52,38 +67,26 @@ public class CurrencyService implements ICurrencyService {
         return null;
     }
 
-    @Override
-    public Currency create(Currency object) {
-        try{
-              repository.save(object);
-        }
-        catch (HibernateException e) {
-            logger.warn("Error while getting the currency" + object.getId());
-            throw e;
-        }
-        return null;
-    }
 
     @Override
     public boolean delete(Currency currencyDto) {
-
         try {
             repository.delete(currencyDto);
         } catch (HibernateException e) {
-           logger.warn("Error while getting the currency" + currencyDto.getId());
-           throw e;
+            logger.warn("Error while getting the currency" + currencyDto.getId());
+            throw e;
         }
         return checkIfCurrencyExist(currencyDto);
     }
 
-
-    public Currency retrieveCurrencyById(Long Id){
-        return  repository.findCurrencyById(Id);
+    public Currency retrieveCurrencyById(Long Id) {
+        return repository.findCurrencyById(Id);
     }
 
     private boolean checkIfCurrencyExist(Currency currency) {
         return repository.existsById(currency.getId());
     }
+
 
 
 }

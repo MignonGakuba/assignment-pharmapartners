@@ -1,54 +1,29 @@
 import { Component } from '@angular/core';
-const USER_DATA = [
-  {
-    id: 1,
-    name: 'John Smith',
-    occupation: 'Advisor',
-    dateOfBirth: '1984-05-05',
-    age: 36,
-  },
-  {
-    id: 2,
-    name: 'Muhi Masri',
-    occupation: 'Developer',
-    dateOfBirth: '1992-02-02',
-    age: 28,
-  },
-  {
-    id: 3,
-    name: 'Peter Adams',
-    occupation: 'HR',
-    dateOfBirth: '2000-01-01',
-    age: 20,
-  },
-  {
-    id: 4,
-    name: 'Lora Bay',
-    occupation: 'Marketing',
-    dateOfBirth: '1977-03-03',
-    age: 43,
-  },
-];
+import { MatTableDataSource } from '@angular/material/table';
+import { Currency } from './currency.model';
+import { JsonResult } from './json-result.model';
+import { BackendAPIService } from './services/backend-api.service';
+
 const COLUMNS_SCHEMA = [
   {
-    key: 'name',
+    key: 'TICKER',
     type: 'text',
-    label: 'Full Name',
+    label: 'TICKER',
   },
   {
-    key: 'occupation',
+    key: 'Name',
     type: 'text',
-    label: 'Occupation',
+    label: 'NAME',
   },
   {
-    key: 'dateOfBirth',
-    type: 'date',
-    label: 'Date of Birth',
+    key: 'NUMBER_OF_COINS',
+    type: 'text',
+    label: 'NUMBER_OF_COINS',
   },
   {
-    key: 'age',
-    type: 'number',
-    label: 'Age',
+    key: 'MARKET_CAP',
+    type: 'text',
+    label: 'MARKET_CAP',
   },
   {
     key: 'isEdit',
@@ -65,32 +40,73 @@ const COLUMNS_SCHEMA = [
 
 
 export class AppComponent {
+
   title = 'Assignment Currencies WebApp';
-
-
-
-  displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
-  dataSource = USER_DATA;
-  columnsSchema: any = COLUMNS_SCHEMA;
-
-
   
+  constructor(
+    private currencyService: BackendAPIService)
+    {}
+
+    displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
+    columnsSchema: any = COLUMNS_SCHEMA;
+    dataSource =  new MatTableDataSource<Currency>();
+    
+    ngOnInit() {
+     
+      this.getAllCurreniesInformation();
+    }
+
+    getAllCurreniesInformation()
+    {
+      this.currencyService.getAllCurrency().subscribe((data:JsonResult) => {
+     if(data.result) {
+          
+       // convert the ist of item to right class 
+      let retreviedCurrencies: Object[] =  data.item as Object [];
+      retreviedCurrencies.map(value =>{
+      let currency : Currency = new Currency(value);
+      //add to list 
+      console.log(currency.Name);
+      this.dataSource.data.unshift(currency);
+      });
+         console.log(data.message);
+       } else {
+         console.log(data.message);
+       }
+     },
+     error => {
+       console.log(error, 'error');
+     });
+    }
+
+
+  //added new currency 
   addRow() {
-    const newRow = {
-      id: Date.now(),
-      name: '',
-      occupation: '',
-      dateOfBirth: '',
-      age: 0,
-      isEdit: true,
+    const newCurrency = {
+      Id: 0 ,
+      Name: '',
+      TICKER: '',
+      NUMBER_OF_COINS: '',
+      MARKET_CAP: '',
     };
-    this.dataSource = [newRow, ...this.dataSource];
+    this.dataSource.data = [newCurrency, ...this.dataSource.data];
   }
 
 
+  //create and compile 
   removeRow(id: number) {
-    this.dataSource = this.dataSource.filter((u) => u.id !== id);
+     this.dataSource.data = this.dataSource.data.filter((u) => u.Id !== id);     
+  }
+
+  confirmToUpdate(id: number){
+   
+    //filter fromt the list
+    //create service methode to update the selected currency with new value
   }
 
 
 }
+  function addRow() {
+    throw new Error('Function not implemented.');
+  }
+

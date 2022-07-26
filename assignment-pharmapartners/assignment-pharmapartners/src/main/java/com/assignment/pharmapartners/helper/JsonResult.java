@@ -1,6 +1,22 @@
 package com.assignment.pharmapartners.helper;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
+
+/**
+ * This Class is responsible to send  the client-side the response of api call.
+ *
+ * @param item      hold the important data  of the requested api call.
+ * @param timestamp  property holds the date-time instance of when the error happened or succeed .
+ * @param message   let the client-side know what the status is on the api call.
+ * @param result    check if the rest call was successfully or not for the client-side
+ * @param errorCode check which error handling events occur
+ */
 public class JsonResult {
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp;
     private String message;
     private Boolean result;
     private Object item;
@@ -11,15 +27,16 @@ public class JsonResult {
     public JsonResult() {
     }
 
-    public JsonResult(String text, Boolean result) {
-        this.message = text;
-        this.result = result;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public JsonResult(String text, Boolean result, Object item) {
-        this.message = text;
-        this.result = result;
-        this.item = item;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public ErrorCode getErrorEnum() {
+        return errorEnum;
     }
 
     public String getMessage() {
@@ -60,7 +77,7 @@ public class JsonResult {
         setErrorCode(errorCode.getValue());
     }
 
-    public void setErrorCode(String errorCode){
+    public void setErrorCode(String errorCode) {
         setErrorCode((ErrorCode.valueOf(errorCode)));
     }
 
@@ -72,9 +89,6 @@ public class JsonResult {
         this.errorMessage = errorMessage;
     }
 
-    public Enum getErrorEnum() {
-        return errorEnum;
-    }
 
     private void setErrorEnum(ErrorCode errorEnum) {
         this.errorEnum = errorEnum;
