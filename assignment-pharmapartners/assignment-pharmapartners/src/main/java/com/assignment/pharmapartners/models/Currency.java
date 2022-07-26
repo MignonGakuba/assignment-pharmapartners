@@ -16,6 +16,7 @@ public class Currency {
 
     //All final attributes
     @GeneratedValue(strategy = IDENTITY)
+
     private Long Id;
 
     @Column(nullable = false)
@@ -136,8 +137,6 @@ public class Currency {
             this.MARKET_CAP = MARKET_CAP;
             return this;
         }
-
-
         /**
          * @return constructed Currency object
          */
