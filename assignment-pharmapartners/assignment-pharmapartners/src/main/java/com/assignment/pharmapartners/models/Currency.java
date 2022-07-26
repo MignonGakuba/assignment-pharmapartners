@@ -15,8 +15,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class Currency {
 
     //All final attributes
+    @Id
     @GeneratedValue(strategy = IDENTITY)
-
     private Long Id;
 
     @Column(nullable = false)
@@ -44,7 +44,6 @@ public class Currency {
         this.MARKET_CAP = builder.MARKET_CAP;
     }
 
-    @Id
     public Long getId() {
         return Id;
     }
@@ -104,30 +103,21 @@ public class Currency {
 
     public static class CurrencyBuilder {
 
-        private Long Id;
+        private final Long Id;
         private String Name;
         private String TICKER;
         private String NUMBER_OF_COINS;
         private String MARKET_CAP;
 
-        public CurrencyBuilder(Long id, String name, String TICKER, String NUMBER_OF_COINS, String MARKET_CAP) {
-            this.Id = id;
+        public Long getId() {
+            return Id;
+        }
+
+        public CurrencyBuilder(Long Id, String name, String TICKER) {
+            this.Id = Id;
             this.Name = name;
             this.TICKER = TICKER;
-            this.NUMBER_OF_COINS = NUMBER_OF_COINS;
-            this.MARKET_CAP = MARKET_CAP;
         }
-
-        public CurrencyBuilder Name(String Name) {
-            this.Name = Name;
-            return this;
-        }
-
-        public CurrencyBuilder TICKER(String TICKER) {
-            this.TICKER = TICKER;
-            return this;
-        }
-
         public CurrencyBuilder NUMBER_OF_COINS(String NUMBER_OF_COINS) {
             this.NUMBER_OF_COINS = NUMBER_OF_COINS;
             return this;
@@ -137,6 +127,7 @@ public class Currency {
             this.MARKET_CAP = MARKET_CAP;
             return this;
         }
+
         /**
          * @return constructed Currency object
          */
@@ -144,6 +135,7 @@ public class Currency {
             Currency currency = new Currency(this);
             return currency;
         }
+
 
     }
 

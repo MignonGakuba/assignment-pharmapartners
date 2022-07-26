@@ -21,6 +21,7 @@ import java.util.List;
 public class CurrencyService implements ICurrencyService {
 
     private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
+
     @Autowired
     private CurrencyRepository repository;
 

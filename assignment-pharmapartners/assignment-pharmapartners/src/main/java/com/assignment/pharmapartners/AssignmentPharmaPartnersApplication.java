@@ -1,12 +1,11 @@
 package com.assignment.pharmapartners;
 
+import com.assignment.pharmapartners.repository.CurrencyRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 
 /**
  *
@@ -15,7 +14,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * made by  @author Mignon Gakuba
  */
 @SpringBootApplication
-@EnableJpaRepositories
 @Configuration
 @EnableWebMvc
 public class AssignmentPharmaPartnersApplication {

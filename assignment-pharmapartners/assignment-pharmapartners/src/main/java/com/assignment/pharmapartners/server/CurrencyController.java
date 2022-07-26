@@ -9,6 +9,7 @@ import com.assignment.pharmapartners.validator.CurrencyValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class CurrencyController {
     private CurrencyService currencyService;
 
     @Autowired
+    @Lazy
     private CurrencyValidator validator;
 
     /**
@@ -84,6 +86,8 @@ public class CurrencyController {
     @PostMapping(value = "/create-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> createCurrency(@RequestBody String json) {
 
+        logger.info("Get all currencies from the memory database");
+
         log(getClass(), "Create new Currency....");
         JsonResult result = new JsonResult();
         try {
@@ -129,6 +133,8 @@ public class CurrencyController {
 
     @GetMapping(value = "/currency/{id}")
     public ResponseEntity<JsonResult> getCurrencyById(@PathVariable(value = "id") long id) {
+        logger.info("Get all currencies from the memory database");
+
         log(getClass(), "Get Currency by identifier....");
         JsonResult result = new JsonResult();
         try {
@@ -165,6 +171,9 @@ public class CurrencyController {
 
     @PutMapping(value = "/update-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> updateCurrency(@RequestBody String json) {
+
+        logger.info("Get all currencies from the memory database");
+
         log(getClass(), "Updating the Currency....");
         JsonResult result = new JsonResult();
         try {
@@ -204,6 +213,8 @@ public class CurrencyController {
 
     @DeleteMapping(value = "/delete-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> deleteCurrency(@RequestBody String json) {
+        logger.info("Get all currencies from the memory database");
+
         log(getClass(), "Delete the Currency....");
         JsonResult result = new JsonResult();
         result.setTimestamp(LocalDateTime.now());
