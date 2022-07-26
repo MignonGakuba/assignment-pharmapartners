@@ -92,14 +92,8 @@ export class AppComponent {
 
   confirmCurrency(element:Currency){
     this.currencyService.createCurrency(JSON.stringify(element)).subscribe((data:JsonResult) => {
+
       if(data.result) {
-           
-        // convert the ist of item to right class 
-       let retreviedCurrencies: Object[] =  data.item as Object [];
-       retreviedCurrencies.map(value =>{
-       let currency : Currency = new Currency(value);
-       this.dataSource.data.unshift(currency);
-       });
           console.log(data.message);
         } else {
           console.log(data.message);
