@@ -19,12 +19,9 @@ public class CurrencyValidator implements IValidator {
      * @return constructed Currency object without sentive information for the client-side
      */
     @Override
-    public void validationCurrency(Currency retrievedCurrency) {
+    public boolean validationCurrency(Currency retrievedCurrency) {
         try {
-            if (!isNullOrEmpty(retrievedCurrency.getName()) && !isNullOrEmpty(retrievedCurrency.getTICKER()) && !isNullOrEmpty(retrievedCurrency.getMARKET_CAP())) {
-                isNullOrEmpty(retrievedCurrency.getNUMBER_OF_COINS());
-
-            }
+            return !isNullOrEmpty(retrievedCurrency.getName()) && !isNullOrEmpty(retrievedCurrency.getTicker()) && !isNullOrEmpty(retrievedCurrency.getMarket_cap()) && !isNullOrEmpty(retrievedCurrency.getNumber_of_coins());
         } catch (Exception e) {
             throw e;
         }
@@ -37,7 +34,7 @@ public class CurrencyValidator implements IValidator {
      */
     @Override
     public boolean validCreateCurrency(Currency newCreatedCurrency) {
-        return !isNullOrEmpty(newCreatedCurrency.getName()) || !isNullOrEmpty(newCreatedCurrency.getTICKER()) || !isNullOrEmpty(newCreatedCurrency.getMARKET_CAP()) || !isNullOrEmpty(newCreatedCurrency.getNUMBER_OF_COINS());
+        return !isNullOrEmpty(newCreatedCurrency.getName()) && !isNullOrEmpty(newCreatedCurrency.getTicker()) && !isNullOrEmpty(newCreatedCurrency.getMarket_cap()) && !isNullOrEmpty(newCreatedCurrency.getNumber_of_coins());
     }
 
     /**

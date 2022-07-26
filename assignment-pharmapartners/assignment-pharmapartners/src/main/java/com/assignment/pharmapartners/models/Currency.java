@@ -17,19 +17,19 @@ public class Currency {
     //All final attributes
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false)
-    private String Name;
+    private String name;
 
     @Column(nullable = false)
-    private String TICKER;
+    private String ticker;
 
     @Column(nullable = false)
-    private String NUMBER_OF_COINS;
+    private String number_of_coins;
 
     @Column(nullable = false)
-    private String MARKET_CAP;
+    private String market_cap;
 
 
     //Constructor
@@ -38,62 +38,63 @@ public class Currency {
     }
 
     private Currency(CurrencyBuilder builder) {
-        this.Name = builder.Name;
-        this.TICKER = builder.TICKER;
-        this.NUMBER_OF_COINS = builder.NUMBER_OF_COINS;
-        this.MARKET_CAP = builder.MARKET_CAP;
+        this.id = builder.Id;
+        this.name = builder.Name;
+        this.ticker = builder.TICKER;
+        this.number_of_coins = builder.NUMBER_OF_COINS;
+        this.market_cap = builder.MARKET_CAP;
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     //All getter, and NO setter to provide immutability
     public void setId(Long Id) {
-        this.Id = Id;
+        this.id = Id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
-    public String getTICKER() {
-        return TICKER;
+    public String getTicker() {
+        return ticker;
     }
 
-    public void setTICKER(String TICKER) {
-        this.TICKER = TICKER;
+    public void setTicker(String TICKER) {
+        this.ticker = TICKER;
     }
 
-    public String getNUMBER_OF_COINS() {
-        return NUMBER_OF_COINS;
+    public String getNumber_of_coins() {
+        return number_of_coins;
     }
 
-    public void setNUMBER_OF_COINS(String NUMBER_OF_COINS) {
-        this.NUMBER_OF_COINS = NUMBER_OF_COINS;
+    public void setNumber_of_coins(String NUMBER_OF_COINS) {
+        this.number_of_coins = NUMBER_OF_COINS;
     }
 
-    public String getMARKET_CAP() {
-        return MARKET_CAP;
+    public String getMarket_cap() {
+        return market_cap;
     }
 
-    public void setMARKET_CAP(String MARKET_CAP) {
-        this.MARKET_CAP = MARKET_CAP;
+    public void setMarket_cap(String MARKET_CAP) {
+        this.market_cap = MARKET_CAP;
     }
 
 
     @Override
     public String toString() {
         return "Currency{" +
-                "Id=" + Id +
-                ", Name='" + Name + '\'' +
-                ", TICKER='" + TICKER + '\'' +
-                ", NUMBER_OF_COINS='" + NUMBER_OF_COINS + '\'' +
-                ", MARKET_CAP='" + MARKET_CAP + '\'' +
+                "Id=" + id +
+                ", Name='" + name + '\'' +
+                ", TICKER='" + ticker + '\'' +
+                ", NUMBER_OF_COINS='" + number_of_coins + '\'' +
+                ", MARKET_CAP='" + market_cap + '\'' +
                 '}';
     }
 
@@ -109,15 +110,12 @@ public class Currency {
         private String NUMBER_OF_COINS;
         private String MARKET_CAP;
 
-        public Long getId() {
-            return Id;
-        }
-
         public CurrencyBuilder(Long Id, String name, String TICKER) {
             this.Id = Id;
             this.Name = name;
             this.TICKER = TICKER;
         }
+
         public CurrencyBuilder NUMBER_OF_COINS(String NUMBER_OF_COINS) {
             this.NUMBER_OF_COINS = NUMBER_OF_COINS;
             return this;
@@ -132,8 +130,7 @@ public class Currency {
          * @return constructed Currency object
          */
         public Currency build() {
-            Currency currency = new Currency(this);
-            return currency;
+            return new Currency(this);
         }
 
 

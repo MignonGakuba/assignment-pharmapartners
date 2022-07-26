@@ -43,7 +43,7 @@ public class CurrencyService implements ICurrencyService {
     public List<Currency> read() {
         List<Currency> currencies = new ArrayList<>();
         try {
-            currencies = repository.findAll(Sort.by(Sort.Direction.ASC, "TICKER"));
+            currencies = repository.findAll(Sort.by(Sort.Direction.ASC, "ticker"));
         } catch (Exception exception) {
             logger.warn(exception.getMessage());
         }
@@ -55,9 +55,9 @@ public class CurrencyService implements ICurrencyService {
         try {
             Currency currencyToUpdate = repository.findCurrencyById(currencyDto.getId());
             currencyToUpdate.setName(currencyDto.getName());
-            currencyToUpdate.setTICKER(currencyDto.getTICKER());
-            currencyToUpdate.setNUMBER_OF_COINS(currencyDto.getNUMBER_OF_COINS());
-            currencyToUpdate.setMARKET_CAP(currencyDto.getMARKET_CAP());
+            currencyToUpdate.setTicker(currencyDto.getTicker());
+            currencyToUpdate.setNumber_of_coins(currencyDto.getNumber_of_coins());
+            currencyToUpdate.setMarket_cap(currencyDto.getMarket_cap());
             repository.save(currencyToUpdate);
 
         } catch (HibernateException e) {

@@ -6,22 +6,22 @@ import { BackendAPIService } from './services/backend-api.service';
 
 const COLUMNS_SCHEMA = [
   {
-    key: 'TICKER',
+    key: 'ticker',
     type: 'text',
     label: 'TICKER',
   },
   {
-    key: 'Name',
+    key: 'name',
     type: 'text',
     label: 'NAME',
   },
   {
-    key: 'NUMBER_OF_COINS',
+    key: 'number_of_coins',
     type: 'text',
     label: 'NUMBER_OF_COINS',
   },
   {
-    key: 'MARKET_CAP',
+    key: 'market_cap',
     type: 'text',
     label: 'MARKET_CAP',
   },
@@ -52,7 +52,6 @@ export class AppComponent {
     dataSource =  new MatTableDataSource<Currency>();
     
     ngOnInit() {
-     
       this.getAllCurreniesInformation();
     }
 
@@ -66,7 +65,6 @@ export class AppComponent {
       retreviedCurrencies.map(value =>{
       let currency : Currency = new Currency(value);
       //add to list 
-      console.log(currency.Name);
       this.dataSource.data.unshift(currency);
       });
          console.log(data.message);
@@ -83,19 +81,21 @@ export class AppComponent {
   //added new currency 
   addRow() {
     const newCurrency = {
-      Id: 0 ,
-      Name: '',
-      TICKER: '',
-      NUMBER_OF_COINS: '',
-      MARKET_CAP: '',
+      id: 0 ,
+      name: '',
+      ticker: '',
+      number_of_coins: '',
+      market_cap: '',
     };
     this.dataSource.data = [newCurrency, ...this.dataSource.data];
   }
 
 
-  //create and compile 
+
   removeRow(id: number) {
-     this.dataSource.data = this.dataSource.data.filter((u) => u.Id !== id);     
+     this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);    
+     
+    
   }
 
   confirmToUpdate(id: number){

@@ -71,7 +71,7 @@ public class CurrencyController {
             result.setResult(false);
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
-            logger.warn("UNKOWN ERROR");
+            logger.warn(e.getMessage());
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -85,10 +85,7 @@ public class CurrencyController {
 
     @PostMapping(value = "/create-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> createCurrency(@RequestBody String json) {
-
-        logger.info("Get all currencies from the memory database");
-
-        log(getClass(), "Create new Currency....");
+        logger.info("create a new currency record.");
         JsonResult result = new JsonResult();
         try {
             Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
@@ -119,7 +116,7 @@ public class CurrencyController {
             result.setResult(false);
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
-            logger.warn("UNKOWN ERROR");
+            logger.warn(e.getMessage());
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -133,9 +130,7 @@ public class CurrencyController {
 
     @GetMapping(value = "/currency/{id}")
     public ResponseEntity<JsonResult> getCurrencyById(@PathVariable(value = "id") long id) {
-        logger.info("Get all currencies from the memory database");
-
-        log(getClass(), "Get Currency by identifier....");
+        logger.info("Get currency by param {id}");
         JsonResult result = new JsonResult();
         try {
             Currency requestedCurrency = currencyService.retrieveCurrencyById(id);
@@ -156,7 +151,7 @@ public class CurrencyController {
             result.setResult(false);
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
-            logger.warn("UNKOWN ERROR");
+            logger.warn(e.getMessage());
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -172,9 +167,7 @@ public class CurrencyController {
     @PutMapping(value = "/update-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> updateCurrency(@RequestBody String json) {
 
-        logger.info("Get all currencies from the memory database");
-
-        log(getClass(), "Updating the Currency....");
+        logger.info("Updating a currency record with new values");
         JsonResult result = new JsonResult();
         try {
             Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
@@ -198,7 +191,7 @@ public class CurrencyController {
             result.setResult(false);
             result.setErrorCode(ErrorCode.GENERIC_OR_UNKNOWN);
             result.setErrorMessage(e.toString());
-            log(this.getClass(), e.getMessage());
+            logger.warn(e.getMessage());
             return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -213,9 +206,7 @@ public class CurrencyController {
 
     @DeleteMapping(value = "/delete-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonResult> deleteCurrency(@RequestBody String json) {
-        logger.info("Get all currencies from the memory database");
-
-        log(getClass(), "Delete the Currency....");
+        logger.info("Delete a currency record");
         JsonResult result = new JsonResult();
         result.setTimestamp(LocalDateTime.now());
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
  * So it contains API for basic CRUD operations and also API for pagination and sorting of the Entity Currency
  */
 @Repository
+@EnableJpaRepositories
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
 
     Currency findCurrencyById(Long Id);

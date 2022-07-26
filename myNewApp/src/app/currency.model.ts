@@ -1,16 +1,16 @@
 export class Currency {
     
-    Id:number
-    Name:String
-    TICKER:String
-    NUMBER_OF_COINS:String
-    MARKET_CAP:String
+    id:number
+    name:String
+    ticker:String
+    number_of_coins:String
+    market_cap:String
 
     constructor(obj?:any){
-        this.Id = obj.id;
-        this.Name = obj.name;
-        this.TICKER = obj.ticker;
-        this.NUMBER_OF_COINS =obj.number_OF_COINS;
-        this.MARKET_CAP =obj.market_CAP;
+        this.id = obj.id;
+        this.name = obj.name;
+        this.ticker = obj.ticker;
+        this.number_of_coins =obj.number_of_coins;
+        this.market_cap =obj.market_cap;
     }
 }

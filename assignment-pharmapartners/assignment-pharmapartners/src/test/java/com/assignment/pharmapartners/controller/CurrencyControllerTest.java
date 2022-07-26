@@ -7,7 +7,6 @@ import com.assignment.pharmapartners.service.CurrencyService;
 import com.assignment.pharmapartners.validator.CurrencyValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.MediaType;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,8 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,21 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CurrencyController.class)
 @AutoConfigureMockMvc
 public class CurrencyControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
-
-    @MockBean
-    private CurrencyValidator currencyValidator;
-
-    @MockBean
-    private CurrencyRepository currencyRepository;
-
-    @MockBean
-    private CurrencyService currencyService;
 
     Currency RECORD_1 = new Currency.CurrencyBuilder(1L, "Bitcoin", "BTC")
             .NUMBER_OF_COINS("16.770.000")
@@ -70,7 +53,16 @@ public class CurrencyControllerTest {
             .NUMBER_OF_COINS("16.670.000")
             .MARKET_CAP("189.580.000.000")
             .build();
-
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper mapper;
+    @MockBean
+    private CurrencyValidator currencyValidator;
+    @MockBean
+    private CurrencyRepository currencyRepository;
+    @MockBean
+    private CurrencyService currencyService;
 
     @Test
     public void getAllRecords_success() throws Exception {
@@ -105,8 +97,6 @@ public class CurrencyControllerTest {
                 .MARKET_CAP("189.5820.000.000")
                 .build();
 
-        System.out.println(RECORD_2.getId());
-        System.out.println(record.getId());
         Mockito.when(currencyService.create(record)).thenReturn(record);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/create-currency")
@@ -124,15 +114,15 @@ public class CurrencyControllerTest {
     @Test
     public void updateCurrencyRecord_success() throws Exception {
 
-        Currency updatedRecord =  new Currency.CurrencyBuilder(7L,"Ethereum","ETH")
+        Currency updatedRecord = new Currency.CurrencyBuilder(7L, "Ethereum", "ETH")
                 .NUMBER_OF_COINS("96.000.710.000")
                 .MARKET_CAP("69.280.000.000")
                 .build();
 
-        Mockito.when(currencyService.retrieveCurrencyById(RECORD_1.getId())).thenReturn(RECORD_1);
+        Mockito.when(currencyService.retrieveCurrencyById(updatedRecord.getId())).thenReturn(RECORD_1);
         Mockito.when(currencyService.create(updatedRecord)).thenReturn(updatedRecord);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/create-currency")
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/update-currency")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(updatedRecord));
@@ -140,13 +130,13 @@ public class CurrencyControllerTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.name", is("Ethereum")));
+                .andExpect(jsonPath("$.item.name", is("Ethereum")));
     }
 
 
     @Test
     public void updateCurrencyRecord_recordNotFound() throws Exception {
-       Currency updatedRecord =  new Currency.CurrencyBuilder(8L,"Ethereum","ETH")
+        Currency updatedRecord = new Currency.CurrencyBuilder(8L, "Ethereum", "ETH")
                 .NUMBER_OF_COINS("96.000.710.000")
                 .MARKET_CAP("69.280.000.000")
                 .build();
@@ -170,12 +160,12 @@ public class CurrencyControllerTest {
     @Test
     public void deleteCurrencyById_success() throws Exception {
 
-        Currency deletedRecord =  new Currency.CurrencyBuilder(8L,"Ethereum","ETH")
+        Currency deletedRecord = new Currency.CurrencyBuilder(8L, "Ethereum", "ETH")
                 .NUMBER_OF_COINS("96.000.710.000")
                 .MARKET_CAP("69.280.000.000")
                 .build();
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/create-currency")
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/delete-currency")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(deletedRecord));
@@ -187,11 +177,10 @@ public class CurrencyControllerTest {
 
     @Test
     public void deleteCurrencyById_notFound() throws Exception {
-        Currency deleteRecord =  new Currency.CurrencyBuilder(8L,"Ethereum","ETH")
+        Currency deleteRecord = new Currency.CurrencyBuilder(8L, "Ethereum", "ETH")
                 .NUMBER_OF_COINS("96.000.710.000")
                 .MARKET_CAP("69.280.000.000")
                 .build();
-
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/currencies/create-currency")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,11 +190,7 @@ public class CurrencyControllerTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(status().isBadRequest())
-                .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof ChangeSetPersister.NotFoundException))
-                .andExpect(result ->
-                        assertEquals("Currency with ID 6 does not exist.", result.getResolvedException().getMessage()));
+                .andExpect(status().isBadRequest());
     }
 
 }

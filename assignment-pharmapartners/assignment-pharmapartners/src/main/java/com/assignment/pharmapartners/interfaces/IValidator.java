@@ -5,7 +5,7 @@ import com.assignment.pharmapartners.models.Currency;
 public interface IValidator {
 
 
-    void validationCurrency(Currency user);
+    boolean validationCurrency(Currency user);
 
     boolean validCreateCurrency(Currency user);
 

@@ -17,7 +17,6 @@ export class BackendAPIService {
   }
   createCurrency(currency: string): Observable<JsonResult> {
    return this.http.post<JsonResult>(environment.apiURL + 'api/currencies/create-currency', currency).pipe(map((response: JsonResult) => response));
-
   }
 
   getAllCurrency():Observable<JsonResult>{
