@@ -32,8 +32,8 @@ export class BackendAPIService {
     return this.http.put<JsonResult>(environment.apiURL + 'api/currencies/update-currency',currency).pipe(map((response: JsonResult) => response));
   }
 
-  deleteCurrency(currency: string):Observable<JsonResult> {
-    return this.http.delete<JsonResult>(environment.apiURL + 'api/currencies/delete-currency'+currency).pipe(map((response: JsonResult) => response));
+  deleteCurrency(currency_Id: number):Observable<JsonResult> {
+    return this.http.delete<JsonResult>(environment.apiURL + 'api/currencies/delete-currency/'+currency_Id).pipe(map((response: JsonResult) => response));
   }
 
 }

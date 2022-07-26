@@ -92,7 +92,6 @@ export class AppComponent {
 
   confirmCurrency(element:Currency){
     this.currencyService.createCurrency(JSON.stringify(element)).subscribe((data:JsonResult) => {
-
       if(data.result) {
           console.log(data.message);
         } else {
@@ -106,14 +105,15 @@ export class AppComponent {
 
 
   removeRow(id: number) {
-     this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);  
-     let currency = this.dataSource.data.filter((u) => u.id = id);  
+    let currency = this.dataSource.data[id];
+    this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);  
 
-
-     this.currencyService.deleteCurrency(JSON.stringify(currency)).subscribe((data:JsonResult) =>{
-      if(data.result) {   
+    this.currencyService.deleteCurrency(currency.id).subscribe((data:JsonResult) =>{
+      if(data.result) {
+           
         console.log(data.message);
-        } else {
+        } 
+        else {
           console.log(data.message);
         }
       },
@@ -123,13 +123,14 @@ export class AppComponent {
 
   }
     
-
   confirmToUpdate(id: number) {
-
+    
+    let currency = this.dataSource.data[id];
     this.dataSource.data = this.dataSource.data.filter((u) => u.id !== id);  
-    let currency = this.dataSource.data.filter((u) => u.id = id);  
 
-    this.currencyService.updateCurrency(JSON.stringify(currency)).subscribe((data:JsonResult) =>{
+    let jsonstring = JSON.stringify(currency);
+
+    this.currencyService.updateCurrency(jsonstring).subscribe((data:JsonResult) =>{
      if(data.result) {   
        console.log(data.message);
        } else {

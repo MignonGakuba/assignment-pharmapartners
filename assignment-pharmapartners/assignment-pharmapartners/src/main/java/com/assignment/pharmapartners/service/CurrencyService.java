@@ -77,7 +77,7 @@ public class CurrencyService implements ICurrencyService {
             logger.warn("Error while getting the currency" + currencyDto.getId());
             throw e;
         }
-        return checkIfCurrencyExist(currencyDto);
+        return !checkIfCurrencyExist(currencyDto);
     }
 
     public Currency retrieveCurrencyById(Long Id) {

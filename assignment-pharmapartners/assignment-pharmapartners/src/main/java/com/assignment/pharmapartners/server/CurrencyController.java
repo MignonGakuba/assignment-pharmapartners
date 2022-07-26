@@ -204,14 +204,14 @@ public class CurrencyController {
      * @return ResponseEntity <JsonResult>
      */
 
-    @DeleteMapping(value = "/delete-currency", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonResult> deleteCurrency(@RequestBody String json) {
+    @DeleteMapping(value = "/delete-currency/{id}")
+    public ResponseEntity<JsonResult> deleteCurrency(@PathVariable(value = "id") long id) {
         logger.info("Delete a currency record");
         JsonResult result = new JsonResult();
         result.setTimestamp(LocalDateTime.now());
 
         try {
-            Currency requestedCurrency = (Currency) JsonLogic.getObject(Currency.class, json);
+            Currency requestedCurrency = currencyService.retrieveCurrencyById(id);
             validator.validationCurrency(requestedCurrency);
             boolean IsDeleted = currencyService.delete(requestedCurrency);
             result.setTimestamp(LocalDateTime.now());
