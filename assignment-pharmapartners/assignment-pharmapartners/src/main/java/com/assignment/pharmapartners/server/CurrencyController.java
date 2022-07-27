@@ -55,7 +55,17 @@ public class CurrencyController {
                                                        @RequestParam(required = false, value = "sort", defaultValue = "name") String sort,
                                                        @RequestParam(required = false, value = "size", defaultValue = "20") Integer size) {
 
-        Pageable firstPageWithThreeElements = PageRequest.of(page, size, Sort.by(sort).descending());
+
+
+        /**
+         * Create get methode to get all currencie with the request params
+         * @param page
+         * @param sort
+         * @param size
+         * This function is showed by the applicant that he can implement sort function 
+         * @return ResponseEntity <JsonResult>
+         */
+        Pageable firstPageWithThreeElements = PageRequest.of(page, size, Sort.by(sort));
         List<Currency> requestedCurrency = currencyService.requestedCurrencies(firstPageWithThreeElements);
         logger.info("Contains:"+String.valueOf(requestedCurrency));
 
