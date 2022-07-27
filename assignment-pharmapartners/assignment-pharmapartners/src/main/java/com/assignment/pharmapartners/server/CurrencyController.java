@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +52,12 @@ public class CurrencyController {
 
     @GetMapping(value = "/get-all-currencies")
     public ResponseEntity<JsonResult> getAllCurrencies(@RequestParam(required = false, value = "page", defaultValue = "0") Integer page,
-                                                       @RequestParam(required = false, value = "TICKER", defaultValue = "BTC") String sort) {
+                                                       @RequestParam(required = false, value = "sort", defaultValue = "name") String sort,
+                                                       @RequestParam(required = false, value = "size", defaultValue = "20") Integer size) {
+
+        Pageable firstPageWithThreeElements = PageRequest.of(page, size, Sort.by(sort).descending());
+        List<Currency> requestedCurrency = currencyService.requestedCurrencies(firstPageWithThreeElements);
+        logger.info("Contains:"+String.valueOf(requestedCurrency));
 
         logger.info("Get all currencies from the memory database");
         JsonResult result = new JsonResult();

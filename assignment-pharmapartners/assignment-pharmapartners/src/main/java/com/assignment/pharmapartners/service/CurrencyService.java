@@ -8,6 +8,9 @@ import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +46,7 @@ public class CurrencyService implements ICurrencyService {
     public List<Currency> read() {
         List<Currency> currencies = new ArrayList<>();
         try {
-            currencies = repository.findAll(Sort.by(Sort.Direction.ASC, "ticker"));
+            currencies = (List<Currency>) repository.findAll(Sort.by(Sort.Direction.ASC, "ticker"));
         } catch (Exception exception) {
             logger.warn(exception.getMessage());
         }
@@ -80,6 +83,16 @@ public class CurrencyService implements ICurrencyService {
         return !checkIfCurrencyExist(currencyDto);
     }
 
+    public List<Currency>  requestedCurrencies(Pageable pageable){
+        Page<Currency> currencies = null;
+        try {
+            currencies = repository.findAll(pageable);
+            logger.info(String.valueOf(currencies));
+        } catch (Exception exception) {
+            logger.warn(exception.getMessage());
+        }
+        return currencies.getContent();
+    }
     public Currency retrieveCurrencyById(Long Id) {
         return repository.findCurrencyById(Id);
     }
